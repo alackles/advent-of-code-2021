@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <bitset>
+#include <algorithm>
 
 #define BITLEN 5
 
@@ -24,27 +25,20 @@ std::vector<std::bitset<BITLEN>> parse_bitset(const std::string & fname) {
   return vec;
 } 
 
-int main() {
-  std::vector<std::bitset<BITLEN>> power = parse_bitset("data/toy.txt");
-  
-  // find most common bit 
-  std::vector<int> ref_vec(BITLEN, 0);
-  for (auto line : power) {
-    for (int i = 0; i < BITLEN; i++) {
-      if (line[i] == 0) {
-        ref_vec[i]--;
-      } else {
-        ref_vec[i]++;
-      }
+// find the most common bit at an index 
+// given a vector of bitsets and an index
+bool mcb(const std::vector<std::bitset<BITLEN>> & vec, const size_t & index) {
+  int common_bit = 0;
+  for (auto entry : vec) {
+    if (entry[index] == 0) {
+      common_bit--;
+    } else {
+      common_bit++;
     }
   }
-  
-  // convert that to 1s and 0s
-  std::bitset<BITLEN> gamma; 
-  for (size_t i = 0; i < BITLEN; i++) {
-    gamma[i] = (ref_vec[i] > 0) ? 1 : 0; 
-  }
-  std::bitset<BITLEN> epsilon = ~gamma;
+  return common_bit >= 0;
+}  
 
-  std::cout << gamma.to_ulong() * epsilon.to_ulong() << std::endl;
+
+int main() {
 }
